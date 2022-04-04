@@ -1,0 +1,95 @@
+---
+title: "Homework 1"
+author: "Hector He"
+date: "4/3/2022"
+output: html_notebook
+---
+
+
+Q1
+Supervised learning typically has a “supervisor” which unsupervised learning does not. The “supervisor” can be construed as our key to evaluating the result we get. To be more exact, we have the “Y” in every pair of (X, Y) where Y is the response and X is the predictor. For example, in the case of an exam, the supervisor stands for the answer key. On the contrary, unsupervised learning (clustering, for example) has no such “key”, and therefore we do not know how well the learning process is.
+
+Q2
+The regression model has a quantitative response Y, while the classification model has a qualitative Y. In other words, the predictors/the response in the regression model are numerical, continuous, and categorical (typically binary), discrete, in the classification model (or the logistic regression). A regression model can be used to determine, for example, if the height of players affects their heart rate, while a classification model can be used to find out if an email containing certain features will goes into SPAM.
+
+Q3
+N/A
+
+Q4
+The descriptive model provides only a visual trend of a set of data without any further interpretation. The predictive model focuses on the prediction of the outcome with minimum reducible errors, from a combination of several known predictors (from several factors to predict the outcome). The inferential model can be used to test theories and focuses more on how different predictors change/affect the final outcome and consequently determines whether they are significant or not. It provides a relationship between predictors and the outcome (see if certain factors affect the outcome). 
+
+Q5
+Mechanistic means we have assumptions over the function f(X1 ,…, Xn) + ε. For example, f is linear/ε is normally distributed. The assumed f does not need to follow the real f. Hence, it has a larger bias (due to extreme values from both sides) but a smaller variance and is easier to understand. On the other hand, empirically-driven means no assumptions on f. Therefore, empirically-driven will require more observations and is indeed more flexible (exactly because the function f is not assumed), because we can include occasionally some extreme observations, even though this could sometimes result in overfitting, as only one specific value is fitted but not others. As a result, it has a relatively smaller bias and larger variance. We can add more predictors in the case of mechanistic, too. However, overfitting will possibly arise here. 
+
+Q6
+Predictive:
+“Given a voter’s profile/data, how likely is it that they will vote in favor of the candidate?”
+The focus is on the outcome, that we predict from a voter’s profile/data (predictors); 
+
+Inferential:
+"How would a voter’s likelihood of support for the candidate change if they had personal contact with the candidate?"
+The focus is on the relationship between the outcome (change of support) and predictors (personal contact with the candidate)
+
+```{r}
+
+library(tidyverse)
+library(ISLR)
+
+```
+
+
+```{r}
+# EX1
+ggplot(data = mpg, aes(x = hwy)) + geom_histogram(fill = 'green', color = 'black', binwidth = 1)
+
+```
+Note: the most common highway miles per gallon are 26, 17, 29 in a decreasing order, and a few outliers > 40
+
+
+
+```{r}
+# EX2
+ggplot(data = mpg, aes(x = hwy, y = cty)) + geom_point()
+
+```
+Note: there is an almost linear relationship between hwy and cty, at least visually, the higher highway miles per gallon, the higher city miles per gallon, positively correlated
+
+
+```{r}
+# EX 3
+ggplot(data = mpg, aes(x = manufacturer)) + geom_bar()
+```
+```{r}
+ggplot(data = mpg, aes(y = reorder(factor(manufacturer), manufacturer, function(y)-length(y)))) + geom_bar() + labs(y = 'manufacturer')
+
+```
+Lincoln and Dodge are the least common and the most common manufacturers respectively. A little bit of research on the Internet enables me to order the barplot, link:   https://www.youtube.com/watch?v=Nl1PWX-rlE4
+
+
+```{r}
+# EX 4
+ggplot(data = mpg, aes(y = hwy, group = cyl)) + geom_boxplot()
+
+```
+Note: the thin box between -0.2 and 0.0 is explained by the fact that few vehicles has 5 cylinders, for vehicles with 8 cylinders, highway miles per gallon are close to one another, albeit a few larger values as outliers and for vehicles with 6 cylinders, relatively farther away from one another
+
+
+
+```{r}
+# EX 5
+library(corrplot)
+head(mpg)
+# Note: only displ, year, cyl, cty, and hwy are numerical. Use only them for the analysis of the correlation
+X <- cor(select(mpg, displ, year, cyl, cty, hwy)) %>%
+  corrplot(method = 'number', order = 'alphabet', type = 'lower')
+```
+Note: positively correlated: hwy vs cty, displ vs cyl; 
+
+negatively correlated: cyl vs cty, displ vs cty, hwy vs cyl, hwy vs displ; 
+
+year is not much significantly related to any, which makes sense because it has much less to do with a car's consumption of fuel
+
+
+
+
+
